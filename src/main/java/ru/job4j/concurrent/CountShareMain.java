@@ -1,5 +1,8 @@
 package ru.job4j.concurrent;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 public class CountShareMain {
     public static void main(String[] args) throws InterruptedException {
         Count count = new Count();
@@ -12,18 +15,16 @@ public class CountShareMain {
         System.out.println(count.get());
     }
 }
-
+@ThreadSafe
 class Count {
+    @GuardedBy("this")
     private int value;
 
-    public void increment() {
+    public synchronized void increment() {
         value++;
     }
 
-    public int get() {
+    public synchronized int get() {
         return value;
     }
 }
-
-/* Все операции, где данные зависят от начального состояния не атомарны.
- Эти операции можно описать через процесс "проверить и выполнить". */
