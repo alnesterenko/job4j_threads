@@ -33,7 +33,7 @@ class AccountStorageTest {
         var firstAccount = storage.getById(1)
                 .orElseThrow(() -> new IllegalStateException("Not found account by id = 1"));
         assertThat(firstAccount.amount()).isEqualTo(100);
-        assertThat(updateSuccess).isFalse();
+        assertThat(updateSuccess).isTrue();
     }
 
     @Test

@@ -8,16 +8,13 @@ public class AccountStorage {
 
     public boolean add(Account account) {
         synchronized (accounts) {
-            accounts.put(account.id(), account);
-            return accounts.get(account.id()).equals(account);
+            return accounts.putIfAbsent(account.id(), account) == null;
         }
     }
 
     public boolean update(Account account) {
         synchronized (accounts) {
-            Account tempAccount = accounts.get(account.id());
-            accounts.put(account.id(), account);
-            return !accounts.get(account.id()).equals(tempAccount);
+            return accounts.replace(account.id(), account) != null;
         }
     }
 
@@ -35,14 +32,13 @@ public class AccountStorage {
 
     public boolean transfer(int fromId, int toId, int amount) {
         synchronized (accounts) {
-            boolean result = true;
+            boolean result = false;
             Optional<Account> from = getById(fromId);
             Optional<Account> to = getById(toId);
             if (from.isPresent() && to.isPresent() && from.get().amount() >= amount && amount > 0 && fromId != toId) {
                 update(new Account(fromId, from.get().amount() - amount));
                 update(new Account(toId, to.get().amount() + amount));
-            } else {
-                result = false;
+                result = true;
             }
             return result;
         }
