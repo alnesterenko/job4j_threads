@@ -19,26 +19,21 @@ public class ParallelSearchInArray<V> extends RecursiveTask<Integer> {
 
     @Override
     protected Integer compute() {
-        int result = -1;
-        if (to == from) {
-            if (array[to].equals(key)) {
-                result = to;
-            }
-            return result;
-        } else {
-            int middle = (from + to) / 2;
-            ParallelSearchInArray<V> leftSearch = new ParallelSearchInArray(array, from, middle, key);
-            ParallelSearchInArray<V> rightSearch = new ParallelSearchInArray(array, middle + 1, to, key);
-            leftSearch.fork();
-            rightSearch.fork();
-            return Math.max(leftSearch.join(), rightSearch.join());
+        if (to - from < LINEAR_SEARCH_LIMIT) {
+            return linearSearch(array, from, to, key);
         }
+        int middle = (from + to) / 2;
+        ParallelSearchInArray<V> leftSearch = new ParallelSearchInArray(array, from, middle, key);
+        ParallelSearchInArray<V> rightSearch = new ParallelSearchInArray(array, middle + 1, to, key);
+        leftSearch.fork();
+        rightSearch.fork();
+        return Math.max(leftSearch.join(), rightSearch.join());
     }
 
-    private static <V> Integer linearSearch(V[] array, V key) {
+    private static <V> Integer linearSearch(V[] array, int from, int to, V key) {
         int result = -1;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].equals(key)) {
+        for (int i = from; i < to; i++) {
+            if (key.equals(array[i])) {
                 result = i;
                 break;
             }
@@ -46,12 +41,8 @@ public class ParallelSearchInArray<V> extends RecursiveTask<Integer> {
         return result;
     }
 
-    private static <V> Integer parallelSearch(V[] array, V key) {
+    public static <V> Integer search(V[] array, V key) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         return forkJoinPool.invoke(new ParallelSearchInArray<>(array, 0, array.length - 1, key));
-    }
-
-    public static <V> Integer search(V[] array, V key) {
-        return array.length < LINEAR_SEARCH_LIMIT ? linearSearch(array, key) : parallelSearch(array, key);
     }
 }
