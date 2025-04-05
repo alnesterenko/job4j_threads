@@ -85,4 +85,21 @@ class ParallelSearchInArrayTest {
         int index = ParallelSearchInArray.search(ints, 101);
         assertThat(index).isEqualTo(-1);
     }
+
+    @Test
+    public void whenNeedToFindLastElement() {
+        Integer[] intArray = {0, 9, 1, 8, 2, 7, 3, 6, 4, 99};
+        int index = ParallelSearchInArray.search(intArray, 99);
+        int expected = 9;
+        assertThat(index).isEqualTo(expected);
+        assertThat(index).isEqualTo(intArray.length - 1);
+    }
+
+    @Test
+    public void whenNeedToFindLastElementInSmallArray() {
+        Integer[] ints = {100};
+        int index = ParallelSearchInArray.search(ints, 100);
+        assertThat(index).isEqualTo(0);
+        assertThat(index).isEqualTo(ints.length - 1);
+    }
 }
