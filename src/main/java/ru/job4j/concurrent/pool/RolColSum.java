@@ -1,10 +1,8 @@
 package ru.job4j.concurrent.pool;
 
-import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class RolColSum {

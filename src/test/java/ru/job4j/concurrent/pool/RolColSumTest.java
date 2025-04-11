@@ -16,9 +16,7 @@ class RolColSumTest {
         };
         RolColSum.Sums[] linearResult = RolColSum.sum(matrix);
         RolColSum.Sums[] asyncResult = RolColSum.asyncSum(matrix);
-        assertThat(linearResult).isEqualTo(expected);
-        assertThat(asyncResult).isEqualTo(expected);
-        assertThat(linearResult).isEqualTo(asyncResult);
+        assertThat(linearResult).isEqualTo(asyncResult).isEqualTo(expected);
     }
 
     @Test
